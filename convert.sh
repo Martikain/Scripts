@@ -10,9 +10,6 @@
 # Finally copy it to /usr/bin with:
 # sudo cp path/to/PointCloudHandler /usr/bin/pch
 
-# NOTE: script must be run from the level where the converted directory is.
-# For example if the directory to be converted is ~/data/meas1/ the script
-# must be run from ~/data
 
 dir=${1%/}
 
@@ -31,12 +28,23 @@ fi
 
 # Loop through all csv files in the directory
 for filename in $dir/*.csv; do
-  newfile="$filename"
 
-  newfile=$(echo "$filename" | sed 's/.csv/.pcd/g')
-  newfile=$(echo "$newfile" | sed "s/$dir//")
-  newfile=$(echo "$newfile" | sed 's/ //g')
+  echo "******************** CONVERSION ********************"
+  # Same name but without any spaces
+  newfile="$(echo -e "${filename}" | tr -d '[:space:]')"
+
+  # Change .csv to .pcd
+  newfile=$(echo "$newfile" | sed 's/.csv/.pcd/g')
+
+  # Create new variable that has \/ instead of /, because / is sed separator
+  dirtmp=$(echo "$dir" | sed 's/\//\\\//g')
+
+  # Create new directory path
+  newfile=$(echo "$newfile" | sed 's/'"$dirtmp"'//g')
+
+  # Remove any backslashes from the new file path
   newfile=$(echo "$newfile" | sed 's/\\//g')
+
   pch "convert" "-s" "$filename" "--delimiter" "," "-i" "intensity" "-d" "$outputDir/$newfile" "-f" "ASCII"
 done
 
