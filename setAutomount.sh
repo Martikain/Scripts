@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# A script for setting up the automount functionality of SenseKit
+# A script for setting up  automount
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"

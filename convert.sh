@@ -10,7 +10,12 @@
 # Finally copy it to /usr/bin with:
 # sudo cp path/to/PointCloudHandler /usr/bin/pch
 
-dir=$1
+# NOTE: script must be run from the level where the converted directory is.
+# For example if the directory to be converted is ~/data/meas1/ the script
+# must be run from ~/data
+
+dir=${1%/}
+
 pcd="_pcd"
 outputDir="$dir$pcd"
 
